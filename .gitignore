@@ -1,2 +1,4 @@
 xhub/node_module/*
 xhub/data.js
+npm-debug.log
+xhub/main.jsbundle
