@@ -14,45 +14,64 @@ import React, {
   ActivityIndicatorIOS,
   InteractionManager,
   WebView,
-  TouchableOpacity
+  TouchableOpacity,
+  ListView,
+  Image,
+  Dimensions
 } from 'react-native';
 import _ from 'lodash';
-import Player from './player';
+import PlayerWrapper from './playerWrapper';
 
 class xhub extends Component {
 
+  constructor() {
+    super();
+    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    this.state = {
+      dataSource: ds.cloneWithRows([]),
+    }
+  }
+
   componentDidMount() {
-    fetch('http://awesome-xhub.herokuapp.com/getMovie?url=http://xonline.tv/watch-tek-080-thick-kiss-sex-mikami-yua-that-caramel-saliva-2026.html')
+    // fetch('http://awesome-xhub.herokuapp.com/getMovie?url=http://xonline.tv/watch-tek-080-thick-kiss-sex-mikami-yua-that-caramel-saliva-2026.html')
+    fetch('http://awesome-xhub.herokuapp.com/getList')
     .then(response => {
       return response.text();
     })
     .then(data => JSON.parse(data))
     .then(data => {
+      const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
       this.setState({
-        movieDirectURL: data.movie[0].file
-      })
+        dataSource: ds.cloneWithRows(data.movies),
+      });
     })
     .catch(err => console.log(err))
   }
 
   render() {
-
-    if(_.get(this, 'state.movieDirectURL')) {
-      return (
-        <Player
-          movieDirectURL={_.get(this, 'state.movieDirectURL')} />
-      )
-    }
-
     return (
-      <View>
-        <Text>Loading...</Text>
-      </View>
-    );
+      <ListView
+        style={styles.fullScreen}
+        dataSource={this.state.dataSource}
+        renderRow={(rowData) => {
+          console.log(rowData);
+          return (
+            <PlayerWrapper
+            url={rowData.link}
+            image={rowData.image} />
+          );
+        }}/>
+    )
   }
 }
 
+var {height, width} = Dimensions.get('window');
+
 const styles = StyleSheet.create({
+  cell: {
+    height: width,
+    width: width
+  },
   container: {
     flex: 1,
     justifyContent: 'center',

@@ -8,7 +8,8 @@ import React, {
   ActivityIndicatorIOS,
   InteractionManager,
   WebView,
-  TouchableOpacity
+  TouchableOpacity,
+  Dimensions
 } from 'react-native';
 import WebViewBridge from 'react-native-webview-bridge';
 import _ from 'lodash';
@@ -106,7 +107,7 @@ export default class Player extends Component {
     const flexRemaining = (1 - this.getCurrentTimePercentage()) * 100;
 
     return (
-      <View style={styles.container}>
+      <View style={styles.cell}>
         <TouchableOpacity style={styles.fullScreen} onPress={() => {this.setState({paused: !this.state.paused})}}>
           <Video
             ref='videoPlayer'
@@ -177,7 +178,14 @@ export default class Player extends Component {
   }
 }
 
+const {height, width} = Dimensions.get('window');
+
 const styles = StyleSheet.create({
+  cell: {
+    height: width,
+    width: width,
+    flex: 1
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
