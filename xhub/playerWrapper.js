@@ -20,11 +20,20 @@ export default class PlayerWrapper extends Component {
   constructor() {
     super();
     this.state = {
-      movieDirectURL: null
+      movieDirectURL: null,
+      onPlay: false
     }
   }
 
   onPress = () => {
+
+    this.setState({
+      onPlay: !this.state.onPlay
+    });
+
+    if (this.state.movieDirectURL) {
+      return;
+    }
 
     const remote = `http://awesome-xhub.herokuapp.com/getMovie?url=`;
 
@@ -42,11 +51,14 @@ export default class PlayerWrapper extends Component {
   }
 
   render() {
-    if (this.state.movieDirectURL) {
+    if (this.state.onPlay && this.state.movieDirectURL) {
       return (
-        <Player
-          movieDirectURL={this.state.movieDirectURL}
-          />
+        <TouchableOpacity>
+          <Player
+            onCancel={this.onPress}
+            movieDirectURL={this.state.movieDirectURL}
+            />
+          </TouchableOpacity>
       )
     }
 

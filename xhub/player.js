@@ -27,7 +27,7 @@ export default class Player extends Component {
       duration: 0.0,
       currentTime: 0.0,
       controls: false,
-      paused: true,
+      paused: false,
       skin: 'custom',
       movieDirectURL: null
     };
@@ -43,16 +43,17 @@ export default class Player extends Component {
     });
   }
 
-  renderSkinControl(skin) {
-    const isSelected = this.state.skin == skin;
-    const selectControls = skin == 'native' || skin == 'embed';
+  renderCloseControl() {
     return (
-      <TouchableOpacity onPress={() => { this.setState({
-          controls: selectControls,
-          skin: skin
-        }) }}>
-        <Text style={[styles.controlOption, {fontWeight: isSelected ? "bold" : "normal"}]}>
-          {skin}
+      <TouchableOpacity
+        style={{flex: 1, flexDirection: 'row', justifyContent: "flex-end", height: 30, alignSelf: 'flex-start'}}
+        onPress={() => {
+        this.props.onCancel();
+      }}>
+      <Text
+        style={[styles.closeButton, {fontWeight: "bold", backgroundColor: "#fff"}]}
+        style={{fontWeight: "bold"}}>
+          Close
         </Text>
       </TouchableOpacity>
     );
@@ -125,13 +126,10 @@ export default class Player extends Component {
           />
         </TouchableOpacity>
 
+        {this.renderCloseControl()}
+
         <View style={styles.controls}>
           <View style={styles.generalControls}>
-            <View style={styles.skinControl}>
-              {this.renderSkinControl('custom')}
-              {this.renderSkinControl('native')}
-              {this.renderSkinControl('embed')}
-            </View>
           </View>
           <View style={styles.generalControls}>
             <View style={styles.rateControl}>
@@ -266,5 +264,11 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginRight: 20,
     marginBottom: 20,
+  },
+  closeButton: {
+    marginTop: 20,
+    marginRight: 20,
+    height: 20,
+    alignSelf: "flex-start"
   }
 });
