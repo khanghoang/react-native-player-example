@@ -18,24 +18,24 @@ import React, {
 import WebViewBridge from 'react-native-webview-bridge';
 import _ from 'lodash';
 import Video from "react-native-video";
-import data from "data";
 
 class xhub extends Component {
 
   constructor() {
     super();
-    this.onBridgeMessage = this.onBridgeMessage.bind(this);
   }
 
   componentDidMount() {
-    this.refs.webview.reload();
-  }
-
-  onBridgeMessage(url) {
-    console.log(url);
-    this.setState({
-      movieDirectURL: url
-    });
+    fetch('http://awesome-xhub.herokuapp.com/getMovie?url=http://xonline.tv/watch-tek-080-thick-kiss-sex-mikami-yua-that-caramel-saliva-2026.html')
+    .then(response => response._bodyText)
+    .then(JSON.parse)
+    .then(data => {
+      console.log(data);
+      this.setState({
+        movieDirectURL: data.movie[0].file
+      })
+    })
+    .catch(console.log)
   }
 
   onValueChange(value) {
@@ -62,53 +62,6 @@ class xhub extends Component {
   }
 
   render() {
-
-    const injectScript = `
-    function webViewBridgeReady(cb) {
-      //checks whether WebViewBirdge exists in global scope.
-      if (window.WebViewBridge) {
-        cb(window.WebViewBridge);
-        return;
-      }
-
-      function handler() {
-        //remove the handler from listener since we don't need it anymore
-        document.removeEventListener('WebViewBridge', handler, false);
-        //pass the WebViewBridge object to the callback
-        cb(window.WebViewBridge);
-      }
-
-      //if WebViewBridge doesn't exist in global scope attach itself to document
-      //event system. Once the code is being injected by extension, the handler will
-      //be called.
-      document.addEventListener('WebViewBridge', handler, false);
-    }
-
-    webViewBridgeReady(function (webViewBridge) {
-      webViewBridge.onMessage = function (message) {
-        // on message from native
-      };
-
-      var directURL = player.src({
-        type: vt,
-        src: vs
-      }).K.src;
-      var videoPlayer = document.createElement("video");
-      videoPlayer.src = directURL;
-      videoPlayer.controls = true;
-
-      var oldBody = document.body;
-      var newBody = document.createElement("body");
-      oldBody.parentNode.replaceChild(newBody, oldBody);
-
-      var mainDiv = document.body;
-      mainDiv.appendChild(videoPlayer);
-      videoPlayer.play();
-
-      webViewBridge.send(directURL);
-    });
-
-    `;
 
     if(_.get(this, 'state.movieDirectURL')) {
       return (
@@ -137,15 +90,9 @@ class xhub extends Component {
     }
 
     return (
-      <WebViewBridge
-        ref="webview"
-        style={styles.webview}
-        source={{uri: url}}
-        startInLoadingState={true}
-        onBridgeMessage={this.onBridgeMessage}
-        injectedJavaScript={injectScript}
-        >
-      </WebViewBridge>
+      <View>
+        <Text>Loading...</Text>
+      </View>
     );
   }
 }
