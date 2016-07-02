@@ -45,17 +45,14 @@ export default class Player extends Component {
 
   renderCloseControl() {
     return (
-      <TouchableOpacity
-        style={{flex: 1, flexDirection: 'row', justifyContent: "flex-end", height: 30, alignSelf: 'flex-start'}}
-        onPress={() => {
-        this.props.onCancel();
-      }}>
       <Text
-        style={[styles.closeButton, {fontWeight: "bold", backgroundColor: "#fff"}]}
-        style={{fontWeight: "bold"}}>
+        onPress={() => {
+          this.props.onCancel();
+        }}
+        style={[styles.closeButton, {fontWeight: "bold", backgroundColor: "#fff", alignSelf: 'flex-end', paddingTop: 5, paddingRight: 10, paddingLeft: 10, paddingBottom: 5}]}
+        >
           Close
         </Text>
-      </TouchableOpacity>
     );
   }
 
@@ -129,33 +126,11 @@ export default class Player extends Component {
         {this.renderCloseControl()}
 
         <View style={styles.controls}>
-          <View style={styles.generalControls}>
-          </View>
-          <View style={styles.generalControls}>
-            <View style={styles.rateControl}>
-              {this.renderRateControl(0.5)}
-              {this.renderRateControl(1.0)}
-              {this.renderRateControl(2.0)}
-            </View>
-
-            <View style={styles.volumeControl}>
-              {this.renderVolumeControl(0.5)}
-              {this.renderVolumeControl(1)}
-              {this.renderVolumeControl(1.5)}
-            </View>
-
-            <View style={styles.resizeModeControl}>
-              {this.renderResizeModeControl('cover')}
-              {this.renderResizeModeControl('contain')}
-              {this.renderResizeModeControl('stretch')}
-            </View>
-          </View>
-
           <View style={styles.trackingControls}>
             <View style={styles.progress}>
               <Slider
                 style={styles.slider}
-                onValueChange={this.onValueChange}
+                onValueChange={_.debounce(this.onValueChange, 200)}
               />
             </View>
           </View>
@@ -201,7 +176,7 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     borderRadius: 5,
     position: 'absolute',
-    bottom: 44,
+    bottom: 30,
     left: 4,
     right: 4,
   },
@@ -263,12 +238,12 @@ const styles = StyleSheet.create({
     bottom: 0,
     marginLeft: 20,
     marginRight: 20,
-    marginBottom: 20,
+    marginBottom: 0,
   },
   closeButton: {
-    marginTop: 20,
+    marginTop: 10,
     marginRight: 20,
-    height: 20,
+    height: 30,
     alignSelf: "flex-start"
   }
 });
