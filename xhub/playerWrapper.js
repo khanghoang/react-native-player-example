@@ -57,6 +57,7 @@ export default class PlayerWrapper extends Component {
           <Player
             onCancel={this.onPress}
             movieDirectURL={this.state.movieDirectURL}
+            {...this.props}
             />
           </TouchableOpacity>
       )

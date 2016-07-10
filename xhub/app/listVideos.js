@@ -10,7 +10,8 @@ import {
   TouchableOpacity,
   ListView,
   Image,
-  Dimensions
+  Dimensions,
+  AsyncStorage
 } from 'react-native';
 import _ from 'lodash';
 import PlayerWrapper from '../playerWrapper';
@@ -50,6 +51,33 @@ export default class ListVideos extends Component {
     })
   }
 
+  onSave = (movie) => {
+    AsyncStorage.getItem('@XHUB:bookmark')
+    .then(data => {
+      if (data) {
+        return JSON.parse(data)
+      }
+
+      return [];
+    })
+    .then(arrayMovies => {
+      const newMovies = _.unionBy([...arrayMovies, movie], m => m.title);
+      return newMovies;
+    })
+    .then(arrayMovies => {
+      return AsyncStorage.setItem('@XHUB:bookmark', JSON.stringify(arrayMovies));
+    })
+    .then(() => {
+      return AsyncStorage.getItem('@XHUB:bookmark');
+    })
+    .then((data) => {
+      console.log('save data', data);
+    })
+    .catch(error => {
+      console.log('khang error', error);
+    })
+  }
+
   render() {
 
     if(this.loadingPromise && this.loadingPromise.isPending()) {
@@ -67,7 +95,10 @@ export default class ListVideos extends Component {
           return (
             <PlayerWrapper
             url={rowData.link}
-            image={rowData.image} />
+            image={rowData.image}
+            onSave={this.onSave}
+            movie={rowData}
+            />
           );
         }}/>
     )

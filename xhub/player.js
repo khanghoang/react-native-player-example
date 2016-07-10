@@ -59,7 +59,7 @@ export default class Player extends Component {
     return (
       <Text
         onPress={() => {
-          this.props.onCancel();
+          this.props.onSave(this.props.movie);
         }}
         style={[styles.saveButton, {fontWeight: "bold", backgroundColor: "#fff", alignSelf: 'flex-end', paddingTop: 5, paddingRight: 10, paddingLeft: 10, paddingBottom: 5}]}
         >
