@@ -4,7 +4,9 @@ import {
   View,
   Text,
   TouchableOpacity,
-  ListView
+  ListView,
+  AsyncStorage,
+  RefreshControl
 } from 'react-native';
 import statefulPromise from '../utils/statefulPromise';
 
@@ -15,22 +17,34 @@ export default class Menu extends Component {
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
       dataSource: ds.cloneWithRows([]),
+      refreshing: true
     }
   }
 
   componentDidMount() {
-    let promise = statefulPromise(fetch('http://awesome-xhub.herokuapp.com/getMenu')
-    .then(response => {
-      return response.text();
-    })
-    .then(data => JSON.parse(data))
-    .then(data => {
-      const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-      this.setState({
-        dataSource: ds.cloneWithRows(data.menu),
-      });
-    })
-    .catch(err => console.log(err)))
+    this.onLoadData();
+  }
+
+  onLoadData = () => {
+    let promise = statefulPromise(
+      fetch('http://awesome-xhub.herokuapp.com/getMenu')
+      .then(response => {
+        return response.text();
+      })
+      .then(data => JSON.parse(data))
+      .then(data => {
+        const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+        this.setState({
+          dataSource: ds.cloneWithRows(data.menu),
+          refreshing: false
+        });
+        return data.menu;
+      })
+      .then(menu => {
+        return AsyncStorage.setItem('@XHUB:menu', JSON.stringify(menu))
+      })
+      .catch(err => console.log(err))
+    )
 
     this.forceUpdate();
 
@@ -43,6 +57,12 @@ export default class Menu extends Component {
   render() {
     return (
       <ListView
+        refreshControl={
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={this.onLoadData}
+          />
+        }
         style={styles.container}
         dataSource={this.state.dataSource}
         renderRow={(rowData) => {

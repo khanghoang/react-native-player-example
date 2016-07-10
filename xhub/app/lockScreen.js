@@ -42,7 +42,7 @@ class LockScreen extends Component {
               tapToClose={true}
               openDrawerOffset={0.3} // 20% gap on the right side of drawer
               panCloseMask={0.5}
-              panOpenMask={200}
+              panOpenMask={40}
               closedDrawerOffset={0}
               styles={styles.drawerStyles}
               tweenHandler={(ratio) => ({
@@ -52,7 +52,6 @@ class LockScreen extends Component {
               content={<Menu />}
               open={true}
               negotiatePan={true}
-              captureGestures={true}
               >
                 <ListVideos />
             </Drawer>

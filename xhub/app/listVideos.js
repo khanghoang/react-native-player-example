@@ -11,7 +11,8 @@ import {
   ListView,
   Image,
   Dimensions,
-  AsyncStorage
+  AsyncStorage,
+  RefreshControl
 } from 'react-native';
 import _ from 'lodash';
 import PlayerWrapper from '../playerWrapper';
@@ -25,10 +26,15 @@ export default class ListVideos extends Component {
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
       dataSource: ds.cloneWithRows([]),
+      refreshing: true
     }
   }
 
   componentDidMount() {
+    this.onLoadData();
+  }
+
+  onLoadData = () => {
     let promise = statefulPromise(fetch('http://awesome-xhub.herokuapp.com/getList')
     .then(response => {
       return response.text();
@@ -39,6 +45,7 @@ export default class ListVideos extends Component {
       const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
       this.setState({
         dataSource: ds.cloneWithRows(movies),
+        refreshing: false
       });
     })
     .catch(err => console.log(err)))
@@ -88,6 +95,12 @@ export default class ListVideos extends Component {
 
     return (
       <ListView
+        refreshControl={
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={this.onLoadData}
+            />
+            }
         style={styles.fullScreen}
         dataSource={this.state.dataSource}
         renderRow={(rowData) => {
