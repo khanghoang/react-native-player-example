@@ -8,9 +8,30 @@ import {
   AsyncStorage,
   RefreshControl
 } from 'react-native';
+import {
+  selectMenuItem
+} from '../action';
+import {
+  connect
+} from 'react-redux';
+import {
+  bindActionCreators
+} from 'redux';
 import statefulPromise from '../utils/statefulPromise';
 
-export default class Menu extends Component {
+function mapStateToProps(state) {
+  return {
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({
+    selectMenuItem
+  }, dispatch);
+}
+
+
+class Menu extends Component {
 
   constructor() {
     super();
@@ -69,7 +90,7 @@ export default class Menu extends Component {
           return (
             <TouchableOpacity
             url={rowData.link}
-            onPress={() => console.log(rowData.link)}
+            onPress={() => this.props.selectMenuItem(rowData.link)}
             >
             <Text
             style={styles.cell}
@@ -94,3 +115,5 @@ const styles = StyleSheet.create({
     marginLeft: 15,
   }
 });
+
+export default connect(mapStateToProps, mapDispatchToProps)(Menu);

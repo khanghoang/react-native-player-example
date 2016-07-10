@@ -9,5 +9,17 @@ import {
   AppRegistry,
 } from 'react-native';
 import LockScreen from './app/lockScreen';
+import { Provider } from 'react-redux';
+import createStore from './createStore';
 
-AppRegistry.registerComponent('xhub', () => LockScreen);
+const store = createStore();
+
+const Main = () => {
+  return (
+    <Provider store={store}>
+      <LockScreen />
+    </Provider>
+  )
+}
+
+AppRegistry.registerComponent('xhub', () => Main);

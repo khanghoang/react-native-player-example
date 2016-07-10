@@ -18,8 +18,25 @@ import _ from 'lodash';
 import PlayerWrapper from '../playerWrapper';
 import statefulPromise from '../utils/statefulPromise';
 import LoadingScreen from './loadingScreen';
+import {
+  connect
+} from 'react-redux';
+import {
+  bindActionCreators
+} from 'redux';
 
-export default class ListVideos extends Component {
+function mapStateToProps(state) {
+  return {
+    menuLink: state.menuLink
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({
+  }, dispatch);
+}
+
+class ListVideos extends Component {
 
   constructor() {
     super();
@@ -34,8 +51,16 @@ export default class ListVideos extends Component {
     this.onLoadData();
   }
 
-  onLoadData = () => {
-    let promise = statefulPromise(fetch('http://awesome-xhub.herokuapp.com/getList')
+  componentWillReceiveProps(newProps) {
+    console.log('new props', newProps);
+    const menuLink = newProps.menuLink;
+    const url = `http://awesome-xhub.herokuapp.com/getList?url=http://awesome-xhub.herokuapp.com/getList?url=${menuLink}`
+    this.onLoadData(url);
+  }
+
+  onLoadData = (url) => {
+    let finalUrl = url || 'http://awesome-xhub.herokuapp.com/getList?url=http://awesome-xhub.herokuapp.com/getList';
+    let promise = statefulPromise(fetch(url)
     .then(response => {
       return response.text();
     })
@@ -203,3 +228,5 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   }
 });
+
+export default connect(mapStateToProps, mapDispatchToProps)(ListVideos);
