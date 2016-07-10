@@ -11,6 +11,7 @@ import {
   Image,
   Dimensions
 } from 'react-native';
+import _ from 'lodash';
 
 export default class PlayerWrapper extends Component {
 
@@ -40,8 +41,10 @@ export default class PlayerWrapper extends Component {
     })
     .then(data => JSON.parse(data))
     .then(data => {
+      const url = _.last(data.movie).file;
+      console.log(url);
       this.setState({
-        movieDirectURL: data.movie[0].file
+        movieDirectURL: _.last(data.movie).file
       })
     })
     .catch(err => console.log(err))

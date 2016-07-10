@@ -55,6 +55,23 @@ export default class Player extends Component {
     );
   }
 
+  renderSaveControl() {
+    return (
+      <Text
+        onPress={() => {
+          this.props.onCancel();
+        }}
+        style={[styles.saveButton, {fontWeight: "bold", backgroundColor: "#fff", alignSelf: 'flex-end', paddingTop: 5, paddingRight: 10, paddingLeft: 10, paddingBottom: 5}]}
+        >
+          Save
+        </Text>
+    );
+  }
+
+  onError = (err) => {
+    console.log(err);
+  }
+
   renderRateControl(rate) {
     const isSelected = (this.state.rate == rate);
 
@@ -117,12 +134,16 @@ export default class Player extends Component {
             resizeMode={this.state.resizeMode}
             onLoad={this.onLoad}
             onProgress={this.onProgress}
-            onEnd={() => { AlertIOS.alert('Done!') }}
+            onEnd={() => {}}
+            onError={this.onError}
             repeat={true}
           />
         </TouchableOpacity>
 
-        {this.renderCloseControl()}
+        <View style={{flex: 1, flexDirection: "row", justifyContent: "space-between", width: width, alignItems: 'flex-end', position: "absolute"}}>
+          {this.renderSaveControl()}
+          {this.renderCloseControl()}
+        </View>
 
         <View style={styles.controls}>
           <View style={styles.trackingControls}>
@@ -243,6 +264,12 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginRight: 20,
     height: 30,
+    alignSelf: "flex-end"
+  },
+  saveButton: {
+    marginTop: 10,
+    height: 30,
+    marginLeft: 20,
     alignSelf: "flex-start"
   }
 });
