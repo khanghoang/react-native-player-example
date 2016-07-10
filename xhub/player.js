@@ -1,6 +1,6 @@
-import React, {
+import React, { Component } from 'react';
+import {
   AppRegistry,
-  Component,
   Text,
   View,
   Slider,
@@ -11,7 +11,6 @@ import React, {
   TouchableOpacity,
   Dimensions
 } from 'react-native';
-import WebViewBridge from 'react-native-webview-bridge';
 import _ from 'lodash';
 import Video from "react-native-video";
 

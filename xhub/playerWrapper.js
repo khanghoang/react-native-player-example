@@ -1,14 +1,11 @@
 import Player from './player';
-import React, {
+import React, {Component} from 'react';
+import {
   AppRegistry,
-  Component,
   Text,
   View,
   Slider,
   StyleSheet,
-  ActivityIndicatorIOS,
-  InteractionManager,
-  WebView,
   TouchableOpacity,
   ListView,
   Image,

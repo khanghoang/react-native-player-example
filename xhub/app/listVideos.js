@@ -1,5 +1,5 @@
-import React, {
-  Component,
+import React, {Component} from 'react';
+import {
   Text,
   View,
   Slider,
@@ -14,6 +14,8 @@ import React, {
 } from 'react-native';
 import _ from 'lodash';
 import PlayerWrapper from '../playerWrapper';
+import statefulPromise from '../utils/statefulPromise';
+import LoadingScreen from './loadingScreen';
 
 export default class ListVideos extends Component {
 
@@ -26,8 +28,7 @@ export default class ListVideos extends Component {
   }
 
   componentDidMount() {
-    // fetch('http://awesome-xhub.herokuapp.com/getMovie?url=http://xonline.tv/watch-tek-080-thick-kiss-sex-mikami-yua-that-caramel-saliva-2026.html')
-    fetch('http://awesome-xhub.herokuapp.com/getList')
+    let promise = statefulPromise(fetch('http://awesome-xhub.herokuapp.com/getList')
     .then(response => {
       return response.text();
     })
@@ -38,10 +39,24 @@ export default class ListVideos extends Component {
         dataSource: ds.cloneWithRows(data.movies),
       });
     })
-    .catch(err => console.log(err))
+    .catch(err => console.log(err)))
+
+    this.forceUpdate();
+
+    this.loadingPromise = promise;
+    promise.then(() => {
+      this.forceUpdate();
+    })
   }
 
   render() {
+
+    if(this.loadingPromise && this.loadingPromise.isPending()) {
+      return (
+        <LoadingScreen />
+      );
+    }
+
     return (
       <ListView
         style={styles.fullScreen}
