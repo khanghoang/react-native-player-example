@@ -34,9 +34,10 @@ export default class ListVideos extends Component {
     })
     .then(data => JSON.parse(data))
     .then(data => {
+      const movies = _.unionBy(data.movies, movie => movie.title);
       const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
       this.setState({
-        dataSource: ds.cloneWithRows(data.movies),
+        dataSource: ds.cloneWithRows(movies),
       });
     })
     .catch(err => console.log(err)))
