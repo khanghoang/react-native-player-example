@@ -5,7 +5,8 @@ import {
   Modal,
   View,
   Text,
-  TouchableHighlight
+  TouchableHighlight,
+  StatusBar
 } from 'react-native';
 import ListVideos from './listVideos';
 import Drawer from 'react-native-drawer'
@@ -29,6 +30,9 @@ class LockScreen extends Component {
   render() {
     return (
       <View>
+        <StatusBar
+          hidden={true}
+        />
         <Modal
           animationType={"slide"}
           transparent={false}
