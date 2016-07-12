@@ -52,9 +52,23 @@ class ListVideos extends Component {
   }
 
   componentWillReceiveProps(newProps) {
-    console.log('new props', newProps);
+
     const menuLink = newProps.menuLink;
-    const url = `http://awesome-xhub.herokuapp.com/getList?url=${menuLink}`
+    if (menuLink === 'local-bookmark') {
+      AsyncStorage.getItem('@XHUB:bookmark')
+      .then(JSON.parse)
+      .then((dataMovies) => {
+        const movies = _.unionBy(dataMovies, movie => movie.title);
+        const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+        this.setState({
+          dataSource: ds.cloneWithRows(movies),
+          refreshing: false
+        });
+      })
+      .catch(console.log)
+      return;
+    }
+
     const url = `https://awesome-xhub.herokuapp.com/getList?url=${menuLink}`
     this.onLoadData(url);
   }

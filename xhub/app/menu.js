@@ -38,8 +38,10 @@ class Menu extends Component {
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
       dataSource: ds.cloneWithRows([]),
-      refreshing: true
+      refreshing: true,
     }
+
+    this.menu = [{title: 'Bookmark', link: 'local-bookmark'}]
   }
 
   componentDidMount() {
@@ -48,15 +50,17 @@ class Menu extends Component {
 
   onLoadData = () => {
     let promise = statefulPromise(
-      fetch('http://awesome-xhub.herokuapp.com/getMenu')
+      fetch('https://awesome-xhub.herokuapp.com/getMenu')
       .then(response => {
         return response.text();
       })
       .then(data => JSON.parse(data))
       .then(data => {
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+        const newMenu = [...this.menu, ...data.menu];
+        console.log(newMenu);
         this.setState({
-          dataSource: ds.cloneWithRows(data.menu),
+          dataSource: ds.cloneWithRows(newMenu),
           refreshing: false
         });
         return data.menu;
@@ -107,7 +111,8 @@ class Menu extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#ffffff"
+    backgroundColor: "#ffffff",
+    paddingTop: 20
   },
   cell: {
     height: 40,
