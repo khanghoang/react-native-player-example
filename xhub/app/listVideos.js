@@ -54,13 +54,13 @@ class ListVideos extends Component {
   componentWillReceiveProps(newProps) {
     console.log('new props', newProps);
     const menuLink = newProps.menuLink;
-    const url = `http://awesome-xhub.herokuapp.com/getList?url=http://awesome-xhub.herokuapp.com/getList?url=${menuLink}`
+    const url = `http://awesome-xhub.herokuapp.com/getList?url=${menuLink}`
     this.onLoadData(url);
   }
 
   onLoadData = (url) => {
-    let finalUrl = url || 'http://awesome-xhub.herokuapp.com/getList?url=http://awesome-xhub.herokuapp.com/getList';
-    let promise = statefulPromise(fetch(url)
+    let finalUrl = url || 'http://awesome-xhub.herokuapp.com/getList?url=';
+    let promise = statefulPromise(fetch(finalUrl)
     .then(response => {
       return response.text();
     })
@@ -110,6 +110,10 @@ class ListVideos extends Component {
     })
   }
 
+  onRefresh = () => {
+    this.onLoadData(this.props.menuLink);
+  }
+
   render() {
 
     if(this.loadingPromise && this.loadingPromise.isPending()) {
@@ -123,7 +127,7 @@ class ListVideos extends Component {
         refreshControl={
           <RefreshControl
             refreshing={this.state.refreshing}
-            onRefresh={this.onLoadData}
+            onRefresh={this.onRefresh}
             />
             }
         style={styles.fullScreen}
