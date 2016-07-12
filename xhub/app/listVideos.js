@@ -55,11 +55,12 @@ class ListVideos extends Component {
     console.log('new props', newProps);
     const menuLink = newProps.menuLink;
     const url = `http://awesome-xhub.herokuapp.com/getList?url=${menuLink}`
+    const url = `https://awesome-xhub.herokuapp.com/getList?url=${menuLink}`
     this.onLoadData(url);
   }
 
   onLoadData = (url) => {
-    let finalUrl = url || 'http://awesome-xhub.herokuapp.com/getList?url=';
+    let finalUrl = url || 'https://awesome-xhub.herokuapp.com/getList?url=';
     let promise = statefulPromise(fetch(finalUrl)
     .then(response => {
       return response.text();

@@ -33,7 +33,7 @@ export default class PlayerWrapper extends Component {
       return;
     }
 
-    const remote = `http://awesome-xhub.herokuapp.com/getMovie?url=`;
+    const remote = `https://awesome-xhub.herokuapp.com/getMovie?url=`;
 
     fetch(`${remote}${this.props.url}`)
     .then(response => {
