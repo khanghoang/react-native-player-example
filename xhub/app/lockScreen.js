@@ -1,5 +1,5 @@
-import React, {
-  Component,
+import React, {Component} from 'react';
+import {
   StyleSheet,
   TextInput,
   Modal,
@@ -8,6 +8,8 @@ import React, {
   TouchableHighlight
 } from 'react-native';
 import ListVideos from './listVideos';
+import Drawer from 'react-native-drawer'
+import Menu from './menu';
 
 class LockScreen extends Component {
 
@@ -33,8 +35,26 @@ class LockScreen extends Component {
           visible={this.state.modalVisible}
           onRequestClose={() => {alert("Modal has been closed.")}}
           underlayColor="#a9d9d4"
+          style={{flex: 1}}
           >
-            <ListVideos />
+            <Drawer
+              type="overlay"
+              tapToClose={true}
+              openDrawerOffset={0.3} // 20% gap on the right side of drawer
+              panCloseMask={0.5}
+              panOpenMask={40}
+              closedDrawerOffset={0}
+              styles={styles.drawerStyles}
+              tweenHandler={(ratio) => ({
+                main: { opacity:(2-ratio)/2 }
+              })}
+              ref={(ref) => this._drawer = ref}
+              content={<Menu />}
+              open={true}
+              negotiatePan={true}
+              >
+                <ListVideos />
+            </Drawer>
         </Modal>
         <TextInput
           style={styles.codeInput}
@@ -63,6 +83,11 @@ const styles = StyleSheet.create({
     height: 40,
     borderColor: 'gray',
     borderWidth: 1
+  },
+  drawerStyles: {
+    shadowColor: '#000000',
+    shadowOpacity: 0.8,
+    shadowRadius: 3
   }
 });
 

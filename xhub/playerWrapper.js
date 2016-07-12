@@ -1,19 +1,17 @@
 import Player from './player';
-import React, {
+import React, {Component} from 'react';
+import {
   AppRegistry,
-  Component,
   Text,
   View,
   Slider,
   StyleSheet,
-  ActivityIndicatorIOS,
-  InteractionManager,
-  WebView,
   TouchableOpacity,
   ListView,
   Image,
   Dimensions
 } from 'react-native';
+import _ from 'lodash';
 
 export default class PlayerWrapper extends Component {
 
@@ -43,8 +41,10 @@ export default class PlayerWrapper extends Component {
     })
     .then(data => JSON.parse(data))
     .then(data => {
+      const url = _.last(data.movie).file;
+      console.log(url);
       this.setState({
-        movieDirectURL: data.movie[0].file
+        movieDirectURL: _.last(data.movie).file
       })
     })
     .catch(err => console.log(err))
@@ -57,6 +57,7 @@ export default class PlayerWrapper extends Component {
           <Player
             onCancel={this.onPress}
             movieDirectURL={this.state.movieDirectURL}
+            {...this.props}
             />
           </TouchableOpacity>
       )

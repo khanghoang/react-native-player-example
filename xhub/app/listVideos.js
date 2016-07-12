@@ -1,5 +1,5 @@
-import React, {
-  Component,
+import React, {Component} from 'react';
+import {
   Text,
   View,
   Slider,
@@ -10,40 +10,122 @@ import React, {
   TouchableOpacity,
   ListView,
   Image,
-  Dimensions
+  Dimensions,
+  AsyncStorage,
+  RefreshControl
 } from 'react-native';
 import _ from 'lodash';
 import PlayerWrapper from '../playerWrapper';
+import statefulPromise from '../utils/statefulPromise';
+import LoadingScreen from './loadingScreen';
+import {
+  connect
+} from 'react-redux';
+import {
+  bindActionCreators
+} from 'redux';
 
-export default class ListVideos extends Component {
+function mapStateToProps(state) {
+  return {
+    menuLink: state.menuLink
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({
+  }, dispatch);
+}
+
+class ListVideos extends Component {
 
   constructor() {
     super();
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
       dataSource: ds.cloneWithRows([]),
+      refreshing: true
     }
   }
 
   componentDidMount() {
-    // fetch('http://awesome-xhub.herokuapp.com/getMovie?url=http://xonline.tv/watch-tek-080-thick-kiss-sex-mikami-yua-that-caramel-saliva-2026.html')
-    fetch('http://awesome-xhub.herokuapp.com/getList')
+    this.onLoadData();
+  }
+
+  componentWillReceiveProps(newProps) {
+    console.log('new props', newProps);
+    const menuLink = newProps.menuLink;
+    const url = `http://awesome-xhub.herokuapp.com/getList?url=http://awesome-xhub.herokuapp.com/getList?url=${menuLink}`
+    this.onLoadData(url);
+  }
+
+  onLoadData = (url) => {
+    let finalUrl = url || 'http://awesome-xhub.herokuapp.com/getList?url=http://awesome-xhub.herokuapp.com/getList';
+    let promise = statefulPromise(fetch(url)
     .then(response => {
       return response.text();
     })
     .then(data => JSON.parse(data))
     .then(data => {
+      const movies = _.unionBy(data.movies, movie => movie.title);
       const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
       this.setState({
-        dataSource: ds.cloneWithRows(data.movies),
+        dataSource: ds.cloneWithRows(movies),
+        refreshing: false
       });
     })
-    .catch(err => console.log(err))
+    .catch(err => console.log(err)))
+
+    this.forceUpdate();
+
+    this.loadingPromise = promise;
+    promise.then(() => {
+      this.forceUpdate();
+    })
+  }
+
+  onSave = (movie) => {
+    AsyncStorage.getItem('@XHUB:bookmark')
+    .then(data => {
+      if (data) {
+        return JSON.parse(data)
+      }
+
+      return [];
+    })
+    .then(arrayMovies => {
+      const newMovies = _.unionBy([...arrayMovies, movie], m => m.title);
+      return newMovies;
+    })
+    .then(arrayMovies => {
+      return AsyncStorage.setItem('@XHUB:bookmark', JSON.stringify(arrayMovies));
+    })
+    .then(() => {
+      return AsyncStorage.getItem('@XHUB:bookmark');
+    })
+    .then((data) => {
+      console.log('save data', data);
+    })
+    .catch(error => {
+      console.log('khang error', error);
+    })
   }
 
   render() {
+
+    if(this.loadingPromise && this.loadingPromise.isPending()) {
+      return (
+        <LoadingScreen />
+      );
+    }
+
     return (
       <ListView
+        refreshControl={
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={this.onLoadData}
+            />
+            }
         style={styles.fullScreen}
         dataSource={this.state.dataSource}
         renderRow={(rowData) => {
@@ -51,7 +133,10 @@ export default class ListVideos extends Component {
           return (
             <PlayerWrapper
             url={rowData.link}
-            image={rowData.image} />
+            image={rowData.image}
+            onSave={this.onSave}
+            movie={rowData}
+            />
           );
         }}/>
     )
@@ -143,3 +228,5 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   }
 });
+
+export default connect(mapStateToProps, mapDispatchToProps)(ListVideos);
