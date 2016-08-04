@@ -30,8 +30,14 @@ platform :ios do
   desc "Submit a new Beta Build to Apple TestFlight"
   desc "This will also make sure the profile is up to date"
   lane :beta do
-    # match(type: "appstore") # more information: https://codesigning.guide
-    gym # Build your app - more options available
+    match(type: "adhoc") # more information: https://codesigning.guide
+
+    # Build your app - more options available
+    gym(
+      scheme: "xhub-release",
+      project: '../xhub/ios/xhub.xcodeproj'
+    )
+
     pilot
 
     # sh "your_script.sh"
