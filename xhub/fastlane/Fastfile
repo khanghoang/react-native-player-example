@@ -27,6 +27,23 @@ platform :ios do
     scan
   end
 
+  desc "Make development build"
+  lane :dev do
+    match(type: "development") # more information: https://codesigning.guide
+
+    # Build jsbundle for ios
+    sh "bundle-ios.sh"
+
+    # Build your app - more options available
+    gym(
+      scheme: "xhub",
+      project: '../xhub/ios/xhub.xcodeproj'
+    )
+
+    # sh "your_script.sh"
+    # You can also use other beta testing services here (run `fastlane actions`)
+  end
+
   desc "Submit a new Beta Build to Apple TestFlight"
   desc "This will also make sure the profile is up to date"
   lane :beta do
