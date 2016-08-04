@@ -618,6 +618,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.khanghoang.xhub;
 				PRODUCT_NAME = xhub;
 			};
 			name = Debug;
@@ -638,6 +639,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.khanghoang.xhub;
 				PRODUCT_NAME = xhub;
 			};
 			name = Release;
