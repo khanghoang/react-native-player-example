@@ -1,7 +1,15 @@
 #HUB
 
 ### BUILD
+
+``
 ```
-react-native bundle --dev false --platform ios --entry-file ./index.ios.js --bundle-output ./main.jsbundle
+
 ```
+fastlane dev
+```
+
+### NOTES:
+- Problem with `match` clones forever: prefer `ssh` over `https`
+when enter the git repo url to sync
 
