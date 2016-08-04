@@ -63,17 +63,17 @@ platform :ios do
     markdown_type = 1
     hockey(
       api_token: ENV['HOCKEY_API_TOKEN'],
-      notes_type: markdown_type,
-      notes: release_notes,
+      notes_type: "",
+      notes: "",
     )
 
     # Make sure our directory is clean, except for changes Fastlane has made
     clean_build_artifacts
 
     # Tag release and push to GitHub
-    commit_version_bump message: "Deploying version #{version_number}."
-    add_git_tag tag: version_number
-    push_to_git_remote
+    # commit_version_bump message: "Deploying version #{version_number}."
+    # add_git_tag tag: version_number
+    # push_to_git_remote
 
     # sh "your_script.sh"
     # You can also use other beta testing services here (run `fastlane actions`)
