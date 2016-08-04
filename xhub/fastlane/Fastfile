@@ -32,12 +32,13 @@ platform :ios do
     match(type: "development") # more information: https://codesigning.guide
 
     # Build jsbundle for ios
-    sh "bundle-ios.sh"
+    sh "cd .. && ./bundle-ios.sh"
 
     # Build your app - more options available
     gym(
       scheme: "xhub",
-      project: '../xhub/ios/xhub.xcodeproj'
+      project: '../xhub/ios/xhub.xcodeproj',
+      output_directory: './Builds/'
     )
 
     # sh "your_script.sh"
