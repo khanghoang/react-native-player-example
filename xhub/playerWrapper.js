@@ -1,5 +1,6 @@
 import Player from './player';
 import React, {Component} from 'react';
+import listItemVideo from './app/listItemVideo';
 import {
   AppRegistry,
   Text,
@@ -67,9 +68,7 @@ export default class PlayerWrapper extends Component {
 
     return (
       <TouchableOpacity onPress={this.onPress}>
-        <Image
-          source={{uri: this.props.image}}
-          style={styles.cell} />
+        { listItemVideo(this.props) }
       </TouchableOpacity>
     )
   }

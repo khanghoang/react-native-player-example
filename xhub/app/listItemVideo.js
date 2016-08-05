@@ -5,20 +5,23 @@ import {
   StyleSheet,
   RefreshControl,
   Dimensions,
+  TouchableOpacity,
+  Image
 } from 'react-native';
 
 const { height, width } = Dimensions.get('window');
 
-const item = ({ image, title}) => {
+const item = ({ movie }) => {
+  const { image, title } = movie;
     return (
-      <TouchableOpacity style={styles.container}>
+      <View style={styles.container}>
         <Image
           source={{ uri: image }}
           style={ styles.thumbImage } />
-        <View style={styles.viewTextContainer }>
-          <Text>{ title }</Text>
+        <View style={ styles.viewTextContainer }>
+          <Text style={ styles.movieTitle }>{ title }</Text>
         </View>
-      </TouchableOpacity>
+      </View>
     )
 }
 
@@ -26,18 +29,24 @@ const aspect = 0.68;
 const styles = StyleSheet.create({
   thumbImage: {
     height: 200,
-    width: height * aspect,
+    width: 140,
+    resizeMode: 'cover'
   },
 
   container: {
+    height: 200,
     flex: 1,
-    alignItems: 'stretch',
     flexDirection: 'row',
   },
 
   viewTextContainer: {
     flex: 1,
     height: 200,
+  },
+
+  movieTitle: {
+    fontSize: 18,
+    padding: 10
   }
 });
 
