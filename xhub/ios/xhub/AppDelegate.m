@@ -8,7 +8,7 @@
  */
 
 #import "AppDelegate.h"
-
+#import <AVFoundation/AVFoundation.h>  // import
 #import "RCTBundleURLProvider.h"
 #import "RCTRootView.h"
 
@@ -19,7 +19,7 @@
   NSURL *jsCodeLocation;
 
   [[RCTBundleURLProvider sharedSettings] setDefaults];
-//  jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index.ios" fallbackResource:nil];
+  [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:nil];  // allow
 
 #ifdef DEBUG
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index.ios" fallbackResource:nil];
