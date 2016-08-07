@@ -45,3 +45,7 @@ fastlane/
 
 # Builds
 Builds/
+
+# ios bundles
+ios/main.jsbundle
+ios/main.jsbundle.meta
