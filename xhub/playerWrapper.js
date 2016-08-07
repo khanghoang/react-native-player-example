@@ -1,6 +1,6 @@
 import Player from './player';
 import React, {Component} from 'react';
-import listItemVideo from './app/listItemVideo';
+import ListItemVideo from './app/listItemVideo';
 import {
   AppRegistry,
   Text,
@@ -20,14 +20,16 @@ export default class PlayerWrapper extends Component {
     super();
     this.state = {
       movieDirectURL: null,
-      onPlay: false
+      onPlay: false,
+      isLoading: false
     }
   }
 
   onPress = () => {
 
     this.setState({
-      onPlay: !this.state.onPlay
+      onPlay: !this.state.onPlay,
+      isLoading: true
     });
 
     if (this.state.movieDirectURL) {
@@ -43,9 +45,9 @@ export default class PlayerWrapper extends Component {
     .then(data => JSON.parse(data))
     .then(data => {
       const url = _.last(data.movie).file;
-      console.log(url);
       this.setState({
-        movieDirectURL: _.last(data.movie).file
+        movieDirectURL: _.last(data.movie).file,
+        isLoading: false
       })
     })
     .catch(err => console.log(err))
@@ -64,17 +66,15 @@ export default class PlayerWrapper extends Component {
       )
     }
 
-    console.log(this.props);
-
     return (
       <TouchableOpacity onPress={this.onPress}>
-        { listItemVideo(this.props) }
+         <ListItemVideo movie={this.props.movie} isLoading={this.state.isLoading} />
       </TouchableOpacity>
     )
   }
 }
 
-const {height, width} = Dimensions.get('window');
+const { height, width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   cell: {
