@@ -24,6 +24,7 @@ import {
 import {
   bindActionCreators
 } from 'redux';
+import InfiniteScrollView from 'react-native-infinite-scroll-view';
 
 function mapStateToProps(state) {
   return {
@@ -43,7 +44,10 @@ class ListVideos extends Component {
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
       dataSource: ds.cloneWithRows([]),
-      refreshing: true
+      refreshing: true,
+      movies: [],
+      isLoading: false,
+      canLoadMore: true
     }
   }
 
@@ -52,50 +56,74 @@ class ListVideos extends Component {
   }
 
   componentWillReceiveProps(newProps) {
+    if (newProps.menuLink) {
+      const menuLink = newProps.menuLink;
+      if (menuLink === 'local-bookmark') {
+        AsyncStorage.getItem('@XHUB:bookmark')
+          .then(JSON.parse)
+          .then((dataMovies) => {
+            const movies = _.unionBy(dataMovies, movie => movie.title);
+            const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+            this.setState({
+              dataSource: ds.cloneWithRows(movies),
+              refreshing: false
+            });
+          })
+          .catch(console.log)
+        return;
+      }
 
-    const menuLink = newProps.menuLink;
-    if (menuLink === 'local-bookmark') {
-      AsyncStorage.getItem('@XHUB:bookmark')
-      .then(JSON.parse)
-      .then((dataMovies) => {
-        const movies = _.unionBy(dataMovies, movie => movie.title);
-        const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-        this.setState({
-          dataSource: ds.cloneWithRows(movies),
-          refreshing: false
-        });
-      })
-      .catch(console.log)
-      return;
+      const url = `https://awesome-xhub.herokuapp.com/getList?url=${menuLink}`
+
+      const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+      this.setStatestate({
+        dataSource: ds.cloneWithRows([]),
+        refreshing: true,
+        movies: [],
+        isLoading: false,
+        canLoadMore: true
+      }, () => {
+        this.onLoadData(url);
+      });
     }
-
-    const url = `https://awesome-xhub.herokuapp.com/getList?url=${menuLink}`
-    this.onLoadData(url);
   }
 
   onLoadData = (url) => {
     let finalUrl = url || 'https://awesome-xhub.herokuapp.com/getList?url=';
+
+    this.setState({
+      url: finalUrl,
+      isLoading: true
+    });
+
     let promise = statefulPromise(fetch(finalUrl)
     .then(response => {
       return response.text();
     })
     .then(data => JSON.parse(data))
     .then(data => {
-      const movies = _.unionBy(data.movies, movie => movie.title);
+
+      // no more movies
+      if (data.movies.length === 0) {
+        this.setState({
+          canLoadMore: false
+        });
+      }
+
+      const movies = _.unionBy([...this.state.movies, ...data.movies], movie => movie.title);
       const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
       this.setState({
         dataSource: ds.cloneWithRows(movies),
-        refreshing: false
+        refreshing: false,
+        movies: movies,
+        isLoading: false
       });
     })
     .catch(err => console.log(err)))
 
     this.forceUpdate();
 
-    this.loadingPromise = promise;
-    promise.then(() => {
-      this.forceUpdate();
-    })
+    return promise;
   }
 
   onSave = (movie) => {
@@ -126,7 +154,15 @@ class ListVideos extends Component {
   }
 
   onRefresh = () => {
-    this.onLoadData(this.props.menuLink);
+    this.onLoadData(this.props.menuLink, true);
+  }
+
+  onLoadMore = () => {
+    return this.onLoadData();
+  }
+
+  canLoadMore = () => {
+    return !this.state.isLoading && this.state.canLoadMore;
   }
 
   render() {
@@ -139,16 +175,17 @@ class ListVideos extends Component {
 
     return (
       <ListView
+        renderScrollComponent={props => <InfiniteScrollView {...props} />}
         refreshControl={
           <RefreshControl
-            refreshing={this.state.refreshing}
-            onRefresh={this.onRefresh}
-            />
-            }
+          refreshing={this.state.refreshing}
+          onRefresh={this.onRefresh}
+          />
+        }
+        distanceToLoadMore={1000}
         style={styles.fullScreen}
         dataSource={this.state.dataSource}
         renderRow={(rowData) => {
-          console.log(rowData);
           return (
             <PlayerWrapper
             url={rowData.link}
@@ -157,7 +194,10 @@ class ListVideos extends Component {
             movie={rowData}
             />
           );
-        }}/>
+        }}
+        canLoadMore={this.canLoadMore}
+        onLoadMoreAsync={this.onLoadMore}
+        />
     )
   }
 }
