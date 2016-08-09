@@ -47,7 +47,9 @@ class ListVideos extends Component {
       refreshing: true,
       movies: [],
       isLoading: false,
-      canLoadMore: true
+      canLoadMore: true,
+      page: 1,
+      url: ''
     }
   }
 
@@ -73,26 +75,27 @@ class ListVideos extends Component {
         return;
       }
 
-      const url = `https://awesome-xhub.herokuapp.com/getList?url=${menuLink}`
+      const url = menuLink;
 
       const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-      this.setStatestate({
+      this.setState({
         dataSource: ds.cloneWithRows([]),
         refreshing: true,
         movies: [],
         isLoading: false,
-        canLoadMore: true
+        canLoadMore: true,
+        page: 1
       }, () => {
         this.onLoadData(url);
       });
     }
   }
 
-  onLoadData = (url) => {
-    let finalUrl = url || 'https://awesome-xhub.herokuapp.com/getList?url=';
+  onLoadData = (url = this.state.url) => {
+    let finalUrl = `https://awesome-xhub.herokuapp.com/getList?url=${url}&page=${this.state.page}`;
 
     this.setState({
-      url: finalUrl,
+      url,
       isLoading: true
     });
 
@@ -116,7 +119,8 @@ class ListVideos extends Component {
         dataSource: ds.cloneWithRows(movies),
         refreshing: false,
         movies: movies,
-        isLoading: false
+        isLoading: false,
+        page: this.state.page + 1
       });
     })
     .catch(err => console.log(err)))
