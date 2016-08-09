@@ -25,6 +25,7 @@ import {
   bindActionCreators
 } from 'redux';
 import InfiniteScrollView from 'react-native-infinite-scroll-view';
+import SGListView from 'react-native-sglistview';
 
 function mapStateToProps(state) {
   return {
@@ -178,7 +179,7 @@ class ListVideos extends Component {
     }
 
     return (
-      <ListView
+      <SGListView
         renderScrollComponent={props => <InfiniteScrollView {...props} />}
         refreshControl={
           <RefreshControl
