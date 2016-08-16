@@ -1,10 +1,6 @@
 #HUB
 
 ### BUILD
-
-``
-```
-
 ```
 fastlane dev
 ```
