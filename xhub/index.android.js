@@ -3,12 +3,12 @@
  * https://github.com/facebook/react-native
  */
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   AppRegistry,
   StyleSheet,
   Text,
-  View
+  View,
 } from 'react-native';
 
 class xhub extends Component {

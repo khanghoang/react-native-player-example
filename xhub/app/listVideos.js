@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   Text,
   View,
@@ -12,25 +12,25 @@ import {
   Image,
   Dimensions,
   AsyncStorage,
-  RefreshControl
+  RefreshControl,
 } from 'react-native';
 import _ from 'lodash';
 import PlayerWrapper from '../playerWrapper';
 import statefulPromise from '../utils/statefulPromise';
 import LoadingScreen from './loadingScreen';
 import {
-  connect
+  connect,
 } from 'react-redux';
 import {
-  bindActionCreators
+  bindActionCreators,
 } from 'redux';
 import InfiniteScrollView from 'react-native-infinite-scroll-view';
 import SGListView from 'react-native-sglistview';
 
 function mapStateToProps(state) {
   return {
-    menuLink: state.menuLink
-  }
+    menuLink: state.menuLink,
+  };
 }
 
 function mapDispatchToProps(dispatch) {
@@ -42,7 +42,7 @@ class ListVideos extends Component {
 
   constructor() {
     super();
-    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
     this.state = {
       dataSource: ds.cloneWithRows([]),
       refreshing: true,
@@ -50,8 +50,8 @@ class ListVideos extends Component {
       isLoading: false,
       canLoadMore: true,
       page: 1,
-      url: ''
-    }
+      url: '',
+    };
   }
 
   componentDidMount() {
@@ -66,26 +66,26 @@ class ListVideos extends Component {
           .then(JSON.parse)
           .then((dataMovies) => {
             const movies = _.unionBy(dataMovies, movie => movie.title);
-            const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+            const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
             this.setState({
               dataSource: ds.cloneWithRows(movies),
-              refreshing: false
+              refreshing: false,
             });
           })
-          .catch(console.log)
+          .catch(console.log);
         return;
       }
 
       const url = menuLink;
 
-      const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+      const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
       this.setState({
         dataSource: ds.cloneWithRows([]),
         refreshing: true,
         movies: [],
         isLoading: false,
         canLoadMore: true,
-        page: 1
+        page: 1,
       }, () => {
         this.onLoadData(url);
       });
@@ -93,38 +93,37 @@ class ListVideos extends Component {
   }
 
   onLoadData = (url = this.state.url) => {
-    let finalUrl = `https://awesome-xhub.herokuapp.com/getList?url=${url}&page=${this.state.page}`;
+    const finalUrl = `https://awesome-xhub.herokuapp.com/getList?url=${url}&page=${this.state.page}`;
 
     this.setState({
       url,
-      isLoading: true
+      isLoading: true,
     });
 
-    let promise = statefulPromise(fetch(finalUrl)
-    .then(response => {
-      return response.text();
-    })
-    .then(data => JSON.parse(data))
-    .then(data => {
-
+    const promise = statefulPromise(fetch(finalUrl)
+      .then(response => {
+        return response.text();
+      })
+      .then(data => JSON.parse(data))
+      .then(data => {
       // no more movies
-      if (data.movies.length === 0) {
-        this.setState({
-          canLoadMore: false
-        });
-      }
+        if (data.movies.length === 0) {
+          this.setState({
+            canLoadMore: false,
+          });
+        }
 
-      const movies = _.unionBy([...this.state.movies, ...data.movies], movie => movie.title);
-      const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-      this.setState({
-        dataSource: ds.cloneWithRows(movies),
-        refreshing: false,
-        movies: movies,
-        isLoading: false,
-        page: this.state.page + 1
-      });
-    })
-    .catch(err => console.log(err)))
+        const movies = _.unionBy([...this.state.movies, ...data.movies], movie => movie.title);
+        const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+        this.setState({
+          dataSource: ds.cloneWithRows(movies),
+          refreshing: false,
+          movies,
+          isLoading: false,
+          page: this.state.page + 1,
+        });
+      })
+      .catch(err => console.log(err)));
 
     this.forceUpdate();
 
@@ -133,29 +132,29 @@ class ListVideos extends Component {
 
   onSave = (movie) => {
     AsyncStorage.getItem('@XHUB:bookmark')
-    .then(data => {
-      if (data) {
-        return JSON.parse(data)
-      }
+      .then(data => {
+        if (data) {
+          return JSON.parse(data);
+        }
 
-      return [];
-    })
-    .then(arrayMovies => {
-      const newMovies = _.unionBy([...arrayMovies, movie], m => m.title);
-      return newMovies;
-    })
-    .then(arrayMovies => {
-      return AsyncStorage.setItem('@XHUB:bookmark', JSON.stringify(arrayMovies));
-    })
-    .then(() => {
-      return AsyncStorage.getItem('@XHUB:bookmark');
-    })
-    .then((data) => {
-      console.log('save data', data);
-    })
-    .catch(error => {
-      console.log('khang error', error);
-    })
+        return [];
+      })
+      .then(arrayMovies => {
+        const newMovies = _.unionBy([...arrayMovies, movie], m => m.title);
+        return newMovies;
+      })
+      .then(arrayMovies => {
+        return AsyncStorage.setItem('@XHUB:bookmark', JSON.stringify(arrayMovies));
+      })
+      .then(() => {
+        return AsyncStorage.getItem('@XHUB:bookmark');
+      })
+      .then((data) => {
+        console.log('save data', data);
+      })
+      .catch(error => {
+        console.log('khang error', error);
+      });
   }
 
   onRefresh = () => {
@@ -171,8 +170,7 @@ class ListVideos extends Component {
   }
 
   render() {
-
-    if(this.loadingPromise && this.loadingPromise.isPending()) {
+    if (this.loadingPromise && this.loadingPromise.isPending()) {
       return (
         <LoadingScreen />
       );
@@ -183,8 +181,8 @@ class ListVideos extends Component {
         renderScrollComponent={props => <InfiniteScrollView {...props} />}
         refreshControl={
           <RefreshControl
-          refreshing={this.state.refreshing}
-          onRefresh={this.onRefresh}
+            refreshing={this.state.refreshing}
+            onRefresh={this.onRefresh}
           />
         }
         distanceToLoadMore={1000}
@@ -193,26 +191,26 @@ class ListVideos extends Component {
         renderRow={(rowData) => {
           return (
             <PlayerWrapper
-            url={rowData.link}
-            image={rowData.image}
-            onSave={this.onSave}
-            movie={rowData}
+              url={rowData.link}
+              image={rowData.image}
+              onSave={this.onSave}
+              movie={rowData}
             />
           );
         }}
         canLoadMore={this.canLoadMore}
         onLoadMoreAsync={this.onLoadMore}
-        />
-    )
+      />
+    );
   }
 }
 
-var {height, width} = Dimensions.get('window');
+let { height, width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   cell: {
     height: width,
-    width: width
+    width,
   },
   container: {
     flex: 1,
@@ -224,7 +222,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5fcff',
   },
   controls: {
-    backgroundColor: "transparent",
+    backgroundColor: 'transparent',
     borderRadius: 5,
     position: 'absolute',
     bottom: 44,
@@ -269,19 +267,19 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   controlOption: {
     alignSelf: 'center',
     fontSize: 11,
-    color: "white",
+    color: 'white',
     paddingLeft: 2,
     paddingRight: 2,
     lineHeight: 12,
   },
   nativeVideoControls: {
     top: 184,
-    height: 300
+    height: 300,
   },
   slider: {
     height: 10,
@@ -290,7 +288,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginRight: 20,
     marginBottom: 20,
-  }
+  },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ListVideos);

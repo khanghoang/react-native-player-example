@@ -5,7 +5,7 @@ export default function statefulPromise(promise) {
   let isRejected = false;
   let isPending = true;
 
-  let finalPromise = promise.then(
+  const finalPromise = promise.then(
     (data) => {
       isFulfilled = true;
       isPending = false;
@@ -16,7 +16,7 @@ export default function statefulPromise(promise) {
       isPending = false;
       return error;
     }
-  )
+  );
 
   finalPromise.isFulfilled = () => isFulfilled;
   finalPromise.isRejected = () => isRejected;

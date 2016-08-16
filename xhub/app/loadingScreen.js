@@ -1,9 +1,9 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   Platform,
   ActivityIndicator,
   View,
-  StyleSheet
+  StyleSheet,
 } from 'react-native';
 
 export default class LoadingScreen extends Component {
@@ -11,11 +11,12 @@ export default class LoadingScreen extends Component {
     return (
       <View style={styles.horizontal}>
         <ActivityIndicator
-          animating={true}
+          animating
           style={styles.centering}
-          size='large' />
+          size="large"
+        />
       </View>
-    )
+    );
   }
 }
 
@@ -29,6 +30,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     padding: 8,
-    flex: 1
-  }
+    flex: 1,
+  },
 });

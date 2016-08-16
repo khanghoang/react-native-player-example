@@ -1,37 +1,33 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {
   Text,
   View,
   StyleSheet,
-  Dimensions,
-  TouchableOpacity,
   Image,
-  ActivityIndicator
+  ActivityIndicator,
 } from 'react-native';
 
-const { height, width } = Dimensions.get('window');
-
-const item = ({ movie, isLoading}) => {
+const item = ({ movie, isLoading }) => {
   const { image, title } = movie;
-    return (
-      <View style={styles.container}>
-        <View style={ styles.containerWrapper }>
-          <Image
-            source={{ uri: image }}
-            style={ styles.thumbImage } />
-            {
-              isLoading &&
-              <ActivityIndicator style={ styles.loadingIndicator } animating={true} size='large'/>
-            }
-        </View>
-        <View style={ styles.viewTextContainer }>
-          <Text style={ styles.movieTitle }>{ title }</Text>
-        </View>
+  return (
+    <View style={styles.container}>
+      <View style={styles.containerWrapper}>
+        <Image
+          source={{ uri: image }}
+          style={styles.thumbImage}
+        />
+          {
+            isLoading &&
+              <ActivityIndicator style={styles.loadingIndicator} animating size="large" />
+          }
       </View>
-    )
-}
+      <View style={styles.viewTextContainer}>
+        <Text style={styles.movieTitle}>{title}</Text>
+      </View>
+    </View>
+  );
+};
 
-const aspect = 0.68;
 const styles = StyleSheet.create({
   thumbImage: {
     height: 200,
@@ -58,11 +54,11 @@ const styles = StyleSheet.create({
 
   movieTitle: {
     fontSize: 18,
-    padding: 10
+    padding: 10,
   },
 
   loadingIndicator: {
-    ...StyleSheet.absoluteFillObject
+    ...StyleSheet.absoluteFillObject,
   },
 
   centering: {

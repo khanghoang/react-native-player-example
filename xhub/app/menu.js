@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   StyleSheet,
   View,
@@ -6,27 +6,27 @@ import {
   TouchableOpacity,
   ListView,
   AsyncStorage,
-  RefreshControl
+  RefreshControl,
 } from 'react-native';
 import {
-  selectMenuItem
+  selectMenuItem,
 } from '../action';
 import {
-  connect
+  connect,
 } from 'react-redux';
 import {
-  bindActionCreators
+  bindActionCreators,
 } from 'redux';
 import statefulPromise from '../utils/statefulPromise';
 
 function mapStateToProps(state) {
   return {
-  }
+  };
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    selectMenuItem
+    selectMenuItem,
   }, dispatch);
 }
 
@@ -35,13 +35,13 @@ class Menu extends Component {
 
   constructor() {
     super();
-    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
     this.state = {
       dataSource: ds.cloneWithRows([]),
       refreshing: true,
-    }
+    };
 
-    this.menu = [{title: 'Bookmark', link: 'local-bookmark'}]
+    this.menu = [{ title: 'Bookmark', link: 'local-bookmark' }];
   }
 
   componentDidMount() {
@@ -49,34 +49,34 @@ class Menu extends Component {
   }
 
   onLoadData = () => {
-    let promise = statefulPromise(
+    const promise = statefulPromise(
       fetch('https://awesome-xhub.herokuapp.com/getMenu')
-      .then(response => {
-        return response.text();
-      })
-      .then(data => JSON.parse(data))
-      .then(data => {
-        const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-        const newMenu = [...this.menu, ...data.menu];
-        console.log(newMenu);
-        this.setState({
-          dataSource: ds.cloneWithRows(newMenu),
-          refreshing: false
-        });
-        return data.menu;
-      })
-      .then(menu => {
-        return AsyncStorage.setItem('@XHUB:menu', JSON.stringify(menu))
-      })
-      .catch(err => console.log(err))
-    )
+        .then(response => {
+          return response.text();
+        })
+        .then(data => JSON.parse(data))
+        .then(data => {
+          const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+          const newMenu = [...this.menu, ...data.menu];
+          console.log(newMenu);
+          this.setState({
+            dataSource: ds.cloneWithRows(newMenu),
+            refreshing: false,
+          });
+          return data.menu;
+        })
+        .then(menu => {
+          return AsyncStorage.setItem('@XHUB:menu', JSON.stringify(menu));
+        })
+        .catch(err => console.log(err))
+    );
 
     this.forceUpdate();
 
     this.loadingPromise = promise;
     promise.then(() => {
       this.forceUpdate();
-    })
+    });
   }
 
   render() {
@@ -93,17 +93,18 @@ class Menu extends Component {
         renderRow={(rowData) => {
           return (
             <TouchableOpacity
-            url={rowData.link}
-            onPress={() => this.props.selectMenuItem(rowData.link)}
+              url={rowData.link}
+              onPress={() => this.props.selectMenuItem(rowData.link)}
             >
             <Text
-            style={styles.cell}
+              style={styles.cell}
             >
             {rowData.title}
             </Text>
             </TouchableOpacity>
           );
-        }}/>
+        }}
+      />
     );
   }
 }
@@ -111,14 +112,14 @@ class Menu extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#ffffff",
-    paddingTop: 20
+    backgroundColor: '#ffffff',
+    paddingTop: 20,
   },
   cell: {
     height: 40,
     fontSize: 18,
     marginLeft: 15,
-  }
+  },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Menu);

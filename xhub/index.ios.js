@@ -4,7 +4,7 @@
  * @flow
  */
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   AppRegistry,
 } from 'react-native';
@@ -19,7 +19,7 @@ const Main = () => {
     <Provider store={store}>
       <LockScreen />
     </Provider>
-  )
-}
+  );
+};
 
 AppRegistry.registerComponent('xhub', () => Main);

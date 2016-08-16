@@ -9,10 +9,10 @@ import {
   InteractionManager,
   WebView,
   TouchableOpacity,
-  Dimensions
+  Dimensions,
 } from 'react-native';
 import _ from 'lodash';
-import Video from "react-native-video";
+import Video from 'react-native-video';
 
 export default class Player extends Component {
 
@@ -28,17 +28,17 @@ export default class Player extends Component {
       controls: false,
       paused: false,
       skin: 'custom',
-      movieDirectURL: null
+      movieDirectURL: null,
     };
   }
 
   onProgress = (data) => {
-    this.setState({currentTime: data.currentTime});
+    this.setState({ currentTime: data.currentTime });
   }
 
   onLoad = (videoDetails) => {
     this.setState({
-      duration: videoDetails.duration
+      duration: videoDetails.duration,
     });
   }
 
@@ -48,8 +48,8 @@ export default class Player extends Component {
         onPress={() => {
           this.props.onCancel();
         }}
-        style={[styles.closeButton, {fontWeight: "bold", backgroundColor: "#fff", alignSelf: 'flex-end', paddingTop: 5, paddingRight: 10, paddingLeft: 10, paddingBottom: 5}]}
-        >
+        style={[styles.closeButton, { fontWeight: 'bold', backgroundColor: '#fff', alignSelf: 'flex-end', paddingTop: 5, paddingRight: 10, paddingLeft: 10, paddingBottom: 5 }]}
+      >
           Close
         </Text>
     );
@@ -61,8 +61,8 @@ export default class Player extends Component {
         onPress={() => {
           this.props.onSave(this.props.movie);
         }}
-        style={[styles.saveButton, {fontWeight: "bold", backgroundColor: "#fff", alignSelf: 'flex-end', paddingTop: 5, paddingRight: 10, paddingLeft: 10, paddingBottom: 5}]}
-        >
+        style={[styles.saveButton, { fontWeight: 'bold', backgroundColor: '#fff', alignSelf: 'flex-end', paddingTop: 5, paddingRight: 10, paddingLeft: 10, paddingBottom: 5 }]}
+      >
           Save
         </Text>
     );
@@ -76,24 +76,24 @@ export default class Player extends Component {
     const isSelected = (this.state.rate == rate);
 
     return (
-      <TouchableOpacity onPress={() => { this.setState({rate: rate}) }}>
-        <Text style={[styles.controlOption, {fontWeight: isSelected ? "bold" : "normal"}]}>
+      <TouchableOpacity onPress={() => { this.setState({ rate }); }}>
+        <Text style={[styles.controlOption, { fontWeight: isSelected ? 'bold' : 'normal' }]}>
           {rate}
         </Text>
       </TouchableOpacity>
-    )
+    );
   }
 
   renderResizeModeControl(resizeMode) {
     const isSelected = (this.state.resizeMode == resizeMode);
 
     return (
-      <TouchableOpacity onPress={() => { this.setState({resizeMode: resizeMode}) }}>
-        <Text style={[styles.controlOption, {fontWeight: isSelected ? "bold" : "normal"}]}>
+      <TouchableOpacity onPress={() => { this.setState({ resizeMode }); }}>
+        <Text style={[styles.controlOption, { fontWeight: isSelected ? 'bold' : 'normal' }]}>
           {resizeMode}
         </Text>
       </TouchableOpacity>
-    )
+    );
   }
 
   getCurrentTimePercentage() {
@@ -108,12 +108,12 @@ export default class Player extends Component {
     const isSelected = (this.state.volume == volume);
 
     return (
-      <TouchableOpacity onPress={() => { this.setState({volume: volume}) }}>
-        <Text style={[styles.controlOption, {fontWeight: isSelected ? "bold" : "normal"}]}>
+      <TouchableOpacity onPress={() => { this.setState({ volume }); }}>
+        <Text style={[styles.controlOption, { fontWeight: isSelected ? 'bold' : 'normal' }]}>
           {volume * 100}%
         </Text>
       </TouchableOpacity>
-    )
+    );
   }
 
   renderCustomSkin() {
@@ -122,10 +122,10 @@ export default class Player extends Component {
 
     return (
       <View style={styles.cell}>
-        <TouchableOpacity style={styles.fullScreen} onPress={() => {this.setState({paused: !this.state.paused})}}>
+        <TouchableOpacity style={styles.fullScreen} onPress={() => { this.setState({ paused: !this.state.paused }); }}>
           <Video
-            ref='videoPlayer'
-            source={{uri:this.props.movieDirectURL}}
+            ref="videoPlayer"
+            source={{ uri: this.props.movieDirectURL }}
             style={styles.fullScreen}
             rate={this.state.rate}
             paused={this.state.paused}
@@ -136,11 +136,11 @@ export default class Player extends Component {
             onProgress={this.onProgress}
             onEnd={() => {}}
             onError={this.onError}
-            repeat={true}
+            repeat
           />
         </TouchableOpacity>
 
-        <View style={{flex: 1, flexDirection: "row", justifyContent: "space-between", width: width, alignItems: 'flex-end', position: "absolute"}}>
+        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', width, alignItems: 'flex-end', position: 'absolute' }}>
           {this.renderSaveControl()}
           {this.renderCloseControl()}
         </View>
@@ -160,8 +160,8 @@ export default class Player extends Component {
   }
 
   onValueChange = (value) => {
-    let duration = _.get(this, "state.duration");
-    if(duration) {
+    const duration = _.get(this, 'state.duration');
+    if (duration) {
       this.refs.videoPlayer.seek(value * this.state.duration);
     }
   }
@@ -171,13 +171,13 @@ export default class Player extends Component {
   }
 }
 
-const {height, width} = Dimensions.get('window');
+const { height, width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   cell: {
     height: width,
-    width: width,
-    flex: 1
+    width,
+    flex: 1,
   },
   container: {
     flex: 1,
@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
     right: 0,
   },
   controls: {
-    backgroundColor: "transparent",
+    backgroundColor: 'transparent',
     borderRadius: 5,
     position: 'absolute',
     bottom: 30,
@@ -238,19 +238,19 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   controlOption: {
     alignSelf: 'center',
     fontSize: 11,
-    color: "white",
+    color: 'white',
     paddingLeft: 2,
     paddingRight: 2,
     lineHeight: 12,
   },
   nativeVideoControls: {
     top: 184,
-    height: 300
+    height: 300,
   },
   slider: {
     height: 10,
@@ -264,12 +264,12 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginRight: 20,
     height: 30,
-    alignSelf: "flex-end"
+    alignSelf: 'flex-end',
   },
   saveButton: {
     marginTop: 10,
     height: 30,
     marginLeft: 20,
-    alignSelf: "flex-start"
-  }
+    alignSelf: 'flex-start',
+  },
 });
