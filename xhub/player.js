@@ -11,7 +11,7 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import _ from 'lodash';
+import _, { constant } from 'lodash';
 import Video from 'react-native-video';
 
 export default class Player extends Component {
@@ -31,6 +31,32 @@ export default class Player extends Component {
       movieDirectURL: null,
     };
   }
+
+	componentWillMount() {
+		this.panResponser = PanResponder.create({
+			onStartShouldSetPanResponder: constant(true),
+			onStartShouldSetPanResponderCapture: constant(true),
+			onMoveShouldSetPanResponder: constant(true),
+			onMoveShouldSetPanResponderCapture: constant(true),
+			onPanResponder: (e, { moveX, x0 }) => {
+				// right to left
+				if (moveX - xO > 0) {
+					this.swipeRightToLeft();
+					return;
+				}
+				// left to right
+				this.swipeLeftToRight();
+			}
+		});
+	}
+
+	goForward(seconds) {
+    this.setState({ currentTime: this.state.currentTime + seconds });
+	}
+
+	goBackward(seconds) {
+    this.setState({ currentTime: this.state.currentTime - seconds });
+	}
 
   onProgress = (data) => {
     this.setState({ currentTime: data.currentTime });
@@ -122,7 +148,11 @@ export default class Player extends Component {
 
     return (
       <View style={styles.cell}>
-        <TouchableOpacity style={styles.fullScreen} onPress={() => { this.setState({ paused: !this.state.paused }); }}>
+        <TouchableOpacity
+					style={styles.fullScreen}
+					onPress={() => { this.setState({ paused: !this.state.paused }); }}
+					{...this.panResponser.panHandlers}
+				>
           <Video
             ref="videoPlayer"
             source={{ uri: this.props.movieDirectURL }}
