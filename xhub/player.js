@@ -1,15 +1,12 @@
 import React, { Component } from 'react';
 import {
-  AppRegistry,
   Text,
   View,
   Slider,
   StyleSheet,
-  ActivityIndicatorIOS,
-  InteractionManager,
-  WebView,
   TouchableOpacity,
   Dimensions,
+	PanResponder,
 } from 'react-native';
 import _, { constant } from 'lodash';
 import Video from 'react-native-video';
@@ -33,29 +30,29 @@ export default class Player extends Component {
   }
 
 	componentWillMount() {
+		const that = this;
 		this.panResponser = PanResponder.create({
 			onStartShouldSetPanResponder: constant(true),
 			onStartShouldSetPanResponderCapture: constant(true),
 			onMoveShouldSetPanResponder: constant(true),
 			onMoveShouldSetPanResponderCapture: constant(true),
-			onPanResponder: (e, { moveX, x0 }) => {
-				// right to left
-				if (moveX - xO > 0) {
-					this.swipeRightToLeft();
+			onPanResponderRelease: (e, { moveX, x0 }) => {
+				if (moveX - x0 > 0) {
+					that.goForward(30);
 					return;
 				}
 				// left to right
-				this.swipeLeftToRight();
+				that.goBackward(10);
 			}
 		});
 	}
 
 	goForward(seconds) {
-    this.setState({ currentTime: this.state.currentTime + seconds });
+		this.refs.videoPlayer.seek(this.state.currentTime + seconds);
 	}
 
 	goBackward(seconds) {
-    this.setState({ currentTime: this.state.currentTime - seconds });
+		this.refs.videoPlayer.seek(this.state.currentTime - seconds);
 	}
 
   onProgress = (data) => {
@@ -148,9 +145,8 @@ export default class Player extends Component {
 
     return (
       <View style={styles.cell}>
-        <TouchableOpacity
+        <View
 					style={styles.fullScreen}
-					onPress={() => { this.setState({ paused: !this.state.paused }); }}
 					{...this.panResponser.panHandlers}
 				>
           <Video
@@ -168,7 +164,7 @@ export default class Player extends Component {
             onError={this.onError}
             repeat
           />
-        </TouchableOpacity>
+        </View>
 
         <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', width, alignItems: 'flex-end', position: 'absolute' }}>
           {this.renderSaveControl()}
@@ -177,6 +173,11 @@ export default class Player extends Component {
 
         <View style={styles.controls}>
           <View style={styles.trackingControls}>
+						<TouchableHighlight
+							onPress={() => { this.setState({ paused: !this.state.paused}); }}
+						>
+							<Text>{this.state.paused ? "Unpause" : "Pause"}</Text>
+						</TouchableHighlight>
             <View style={styles.progress}>
               <Slider
                 style={styles.slider}
