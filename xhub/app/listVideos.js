@@ -1,15 +1,7 @@
 import React, { Component } from 'react';
 import {
-  Text,
-  View,
-  Slider,
   StyleSheet,
-  ActivityIndicatorIOS,
-  InteractionManager,
-  WebView,
-  TouchableOpacity,
   ListView,
-  Image,
   Dimensions,
   AsyncStorage,
   RefreshControl,
@@ -101,9 +93,9 @@ class ListVideos extends Component {
     });
 
     const promise = statefulPromise(fetch(finalUrl)
-      .then(response => {
-        return response.text();
-      })
+      .then(response => (
+        response.text()
+      ))
       .then(data => JSON.parse(data))
       .then(data => {
       // no more movies
@@ -205,7 +197,46 @@ class ListVideos extends Component {
   }
 }
 
-let { height, width } = Dimensions.get('window');
+const ListViewStatelessComponent = ({
+  isLoading,
+  isRefreshing,
+  onRefreshing,
+  dataSource,
+  onSave,
+  canLoadMore,
+  onLoadMore,
+}) => {
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
+
+  return (
+    <SGListView
+      renderScrollComponent={props => <InfiniteScrollView {...props} />}
+      refreshControl={
+        <RefreshControl
+          refreshing={isRefreshing}
+          onRefresh={onRefreshing}
+        />
+      }
+      distanceToLoadMore={1000}
+      style={styles.fullScreen}
+      dataSource={dataSource}
+      renderRow={(rowData) => (
+        <PlayerWrapper
+          url={rowData.link}
+          image={rowData.image}
+          onSave={onSave}
+          movie={rowData}
+        />
+      )}
+      canLoadMore={canLoadMore}
+      onLoadMoreAsync={onLoadMore}
+    />
+  );
+};
+
+const { width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   cell: {
