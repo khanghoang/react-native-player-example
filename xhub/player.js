@@ -37,7 +37,7 @@ export default class Player extends Component {
 			onMoveShouldSetPanResponder: constant(true),
 			onMoveShouldSetPanResponderCapture: constant(true),
 			onPanResponderRelease: (e, { moveX, x0 }) => {
-				if (moveX - x0 > 0) {
+				if (moveX - x0 < 0) {
 					that.goForward(30);
 					return;
 				}
@@ -173,12 +173,13 @@ export default class Player extends Component {
 
         <View style={styles.controls}>
           <View style={styles.trackingControls}>
-						<TouchableHighlight
-							onPress={() => { this.setState({ paused: !this.state.paused}); }}
-						>
-							<Text>{this.state.paused ? "Unpause" : "Pause"}</Text>
-						</TouchableHighlight>
             <View style={styles.progress}>
+							<TouchableOpacity
+								onPress={() => { this.setState({ paused: !this.state.paused}); }}
+								style={{ marginLeft: 10, width: 50, }}
+							>
+								<Text style={{ color: 'white' }}>{this.state.paused ? "Unpause" : "Pause"}</Text>
+							</TouchableOpacity>
               <Slider
                 style={styles.slider}
                 onValueChange={_.debounce(this.onValueChange, 200)}
