@@ -7,6 +7,7 @@ import {
   Text,
   TouchableHighlight,
   StatusBar,
+	AppState, 
 } from 'react-native';
 import ListVideos from './listVideos';
 import Drawer from 'react-native-drawer';
@@ -22,6 +23,23 @@ class LockScreen extends Component {
       modalVisible: false,
     };
   }
+
+	componentDidMount() {
+		AppState.addEventListener('change', this.handleAppStateChange);
+	}
+
+	componentWillMount() {
+		AppState.removeEventListener('change', this.handleAppStateChange);
+	}
+
+	handleAppStateChange = (appState) => {
+		if (appState === 'background' || appState === 'inactive') {
+			// go back to lock screen
+			this.setModalVisible(false);
+			// reset code
+			this.setState({ currentCode: '' });
+		}
+	}
 
   setModalVisible(visible) {
     this.setState({ modalVisible: visible });
