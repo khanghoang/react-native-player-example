@@ -11,6 +11,8 @@
 #import <AVFoundation/AVFoundation.h>  // import
 #import "RCTBundleURLProvider.h"
 #import "RCTRootView.h"
+#import "Firebase.h" // if you are using Non Cocoapod approach
+#import "RNFIRMessaging.h"
 
 @implementation AppDelegate
 
@@ -38,7 +40,15 @@
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+  
+  // firebase notification
+  [FIRApp configure];
   return YES;
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)notification fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))handler {
+  [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:notification];
+     handler(UIBackgroundFetchResultNewData);
 }
 
 @end
