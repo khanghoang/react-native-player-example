@@ -31,7 +31,7 @@ platform :ios do
   lane :dev do
 
     # Make sure we start off with a clean slate
-    ensure_git_status_clean
+    # ensure_git_status_clean
 
     ## Increment build number to current date
     #build_number = Time.new.strftime("%Y.%m.%d")
@@ -56,7 +56,7 @@ platform :ios do
     # Build your app - more options available
     gym(
       scheme: "xhub",
-      project: '../xhub/ios/xhub.xcodeproj',
+      workspace: '../xhub/ios/xhub.xcworkspace',
       output_directory: './Builds/'
     )
 
