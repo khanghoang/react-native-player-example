@@ -1,0 +1,6 @@
+framework module Pods_xhub {
+  umbrella header "Pods-xhub-umbrella.h"
+
+  export *
+  module * { export * }
+}
