@@ -92,11 +92,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
   // this callback will not be fired till the user taps on the notification launching the application.
   // TODO: Handle data of notification
   
-  // Print message ID.
-  NSLog(@"Message ID: %@", userInfo[@"gcm.message_id"]);
-  
-  // Pring full message.
-  NSLog(@"%@", userInfo);
+  [RCTPushNotificationManager didReceiveRemoteNotification:userInfo];
 }
 
 // Required for the localNotification event.

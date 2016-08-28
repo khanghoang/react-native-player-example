@@ -26,9 +26,13 @@ class LockScreen extends Component {
     };
   }
 
+	onNotification(notification) {
+		console.log(notification.getMessage())
+	}
+
 	componentDidMount() {
 
-		PushNotificationIOS.addEventListener("notification", (notification) => console.log(notification.getMessage()))
+		PushNotificationIOS.addEventListener("notification", this.onNotification);
 
 		AppState.addEventListener('change', this.handleAppStateChange);
 
@@ -66,6 +70,7 @@ class LockScreen extends Component {
 
 	componentWillMount() {
 		AppState.removeEventListener('change', this.handleAppStateChange);
+		PushNotificationIOS.removeEventListener('notification', this.onNotification);
 	}
 
 	handleAppStateChange = (appState) => {
