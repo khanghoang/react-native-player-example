@@ -12,6 +12,7 @@
     "react-native": "^0.29.0",
     "react-native-drawer": "^2.2.6",
     "react-native-infinite-scroll-view": "^0.4.1",
+    "react-native-push-notification": "^2.0.2",
     "react-native-sglistview": "^0.3.2",
     "react-native-video": "0.8.0-beta",
     "react-redux": "^4.4.5",
