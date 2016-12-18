@@ -3461,15 +3461,15 @@ react-native-sglistview@^0.3.2:
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/react-native-sglistview/-/react-native-sglistview-0.3.2.tgz#c6a59a3f4926a30d60410b041a3bd894d140576e"
 
-react-native-video@0.8.0-beta:
-  version "0.8.0-beta"
-  resolved "https://registry.yarnpkg.com/react-native-video/-/react-native-video-0.8.0-beta.tgz#80a36a23355600166dfa1783773f223f72f1fc19"
+react-native-video@0.9.0:
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/react-native-video/-/react-native-video-0.9.0.tgz#684f8fcc4e8ba6cd73226c70845bee8ee85a8b3b"
   dependencies:
     keymirror "0.1.1"
 
-react-native@^0.29.0:
-  version "0.29.2"
-  resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.29.2.tgz#74aa69815da1d61bd3c67de58406adaa08bb7974"
+react-native@0.29.0:
+  version "0.29.0"
+  resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.29.0.tgz#06e732f11cc86d7a3598267fd5befb4c96490ddc"
   dependencies:
     absolute-path "^0.0.0"
     art "^0.10.0"
@@ -3563,9 +3563,9 @@ react-transform-hmr@^1.0.4:
     global "^4.3.0"
     react-proxy "^1.1.7"
 
-react@^15.2.1:
-  version "15.4.1"
-  resolved "https://registry.yarnpkg.com/react/-/react-15.4.1.tgz#498e918602677a3983cd0fd206dfe700389a0dd6"
+react@15.3.2:
+  version "15.3.2"
+  resolved "https://registry.yarnpkg.com/react/-/react-15.3.2.tgz#a7bccd2fee8af126b0317e222c28d1d54528d09e"
   dependencies:
     fbjs "^0.8.4"
     loose-envify "^1.1.0"
