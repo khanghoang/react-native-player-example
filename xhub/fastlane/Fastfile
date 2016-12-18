@@ -11,7 +11,7 @@
 
 # This is the minimum version number required.
 # Update this, if you use features of a newer version
-fastlane_version "1.98.0"
+fastlane_version "1.100.0"
 
 default_platform :ios
 
@@ -25,6 +25,18 @@ platform :ios do
   desc "Runs all the tests"
   lane :test do
     scan
+  end
+
+  desc "[iOS] Add new device"
+  lane :add_device do
+  device_name = prompt(text: "Enter the device name: ")
+  device_udid = prompt(text: "Enter the device UDID: ")
+  device_hash = {}
+  device_hash[device_name] = device_udid
+  register_devices(
+      devices: device_hash
+      )
+  refresh_profiles
   end
 
   desc "Make development build"

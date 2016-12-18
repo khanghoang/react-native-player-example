@@ -9,6 +9,7 @@
     "babel-preset-react-native-stage-0": "^1.0.1",
     "lodash": "^4.11.1",
     "react": "^15.2.1",
+    "react-addons-linked-state-mixin": "^15.4.1",
     "react-native": "^0.29.0",
     "react-native-drawer": "^2.2.6",
     "react-native-infinite-scroll-view": "^0.4.1",
