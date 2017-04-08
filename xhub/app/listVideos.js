@@ -18,6 +18,7 @@ import {
 } from 'redux';
 import InfiniteScrollView from 'react-native-infinite-scroll-view';
 import SGListView from 'react-native-sglistview';
+import config from '../config';
 
 function mapStateToProps(state) {
   return {
@@ -85,7 +86,7 @@ class ListVideos extends Component {
   }
 
   onLoadData = (url = this.state.url) => {
-    const finalUrl = `https://awesome-xhub.herokuapp.com/getList?url=${url}&page=${this.state.page}`;
+    const finalUrl = `${config}/getList?url=${url}&page=${this.state.page}`;
 
     this.setState({
       url,

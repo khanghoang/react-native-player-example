@@ -1,6 +1,7 @@
 import Player from './player';
 import React, { Component } from 'react';
 import ListItemVideo from './app/listItemVideo';
+import config from './config';
 import {
   AppRegistry,
   Text,
@@ -35,7 +36,7 @@ export default class PlayerWrapper extends Component {
       return;
     }
 
-    const remote = 'https://awesome-xhub.herokuapp.com/getMovie?url=';
+    const remote = `${config}/getMovie?url=`;
 
     fetch(`${remote}${this.props.url}`)
       .then(response => {

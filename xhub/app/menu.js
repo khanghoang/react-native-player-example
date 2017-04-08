@@ -18,6 +18,7 @@ import {
   bindActionCreators,
 } from 'redux';
 import statefulPromise from '../utils/statefulPromise';
+import config from '../config';
 
 function mapStateToProps(state) {
   return {
@@ -50,7 +51,7 @@ class Menu extends Component {
 
   onLoadData = () => {
     const promise = statefulPromise(
-      fetch('https://awesome-xhub.herokuapp.com/getMenu')
+      fetch(`${config}/getMenu`)
         .then(response => {
           return response.text();
         })
