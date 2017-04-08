@@ -8,12 +8,10 @@ import {
   TouchableHighlight,
   StatusBar,
 	AppState, 
-	PushNotificationIOS,
 } from 'react-native';
 import ListVideos from './listVideos';
 import Drawer from 'react-native-drawer';
 import Menu from './menu';
-import PushNotification from 'react-native-push-notification';
 
 class LockScreen extends Component {
 
@@ -25,62 +23,6 @@ class LockScreen extends Component {
       modalVisible: false,
     };
   }
-
-	onNotification(notification) {
-		console.log(notification.getMessage())
-	}
-
-	componentDidMount() {
-
-		PushNotificationIOS.addEventListener("notification", this.onNotification);
-
-		AppState.addEventListener('change', this.handleAppStateChange);
-
-		PushNotification.configure({
-
-			// (optional) Called when Token is generated (iOS and Android)
-			onRegister: function(token) {
-				console.log( 'TOKEN:', token );
-			},
-
-			// (required) Called when a remote or local notification is opened or received
-			onNotification: function(notification) {
-				console.log( 'NOTIFICATION:', notification );
-			},
-
-			// IOS ONLY (optional): default: all - Permissions to register.
-			permissions: {
-				alert: true,
-				badge: true,
-				sound: true
-			},
-
-			// Should the initial notification be popped automatically
-			// default: true
-			popInitialNotification: true,
-
-			/**
-			 * (optional) default: true
-			 * - Specified if permissions (ios) and token (android and ios) will requested or not,
-			 * - if not, you must call PushNotificationsHandler.requestPermissions() later
-			 */
-			requestPermissions: true,
-		});
-	}
-
-	componentWillMount() {
-		AppState.removeEventListener('change', this.handleAppStateChange);
-		PushNotificationIOS.removeEventListener('notification', this.onNotification);
-	}
-
-	handleAppStateChange = (appState) => {
-		if (appState === 'background' || appState === 'inactive') {
-			// go back to lock screen
-			this.setModalVisible(false);
-			// reset code
-			this.setState({ currentCode: '' });
-		}
-	}
 
   setModalVisible(visible) {
     this.setState({ modalVisible: visible });
